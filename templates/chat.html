@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Weather Assistant</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- SETTINGS -->
+
+    <div class="settings">
+        ⚙️
+    </div>
+
+
+    <!-- MAIN -->
+
+    <main class="container">
+
+
+        <!-- WEATHER ICON -->
+
+        <div class="weather-icon">
+            🌤️
+        </div>
+
+
+        <!-- TITLE -->
+
+        <h1>
+            Weather<br>
+            Assistant
+        </h1>
+
+
+        <!-- CHAT MESSAGES -->
+
+        <div class="chat-box">
+
+            {% if messages %}
+
+                {% for msg in messages %}
+
+                    {% if msg.type == 'human' %}
+
+                        <div class="message user">
+                            {{ msg.content }}
+                        </div>
+
+                    {% elif msg.type == 'ai' %}
+
+                        <div class="message agent">
+                            {{ msg.content }}
+                        </div>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- BUTTONS / INPUT -->
+
+        <div class="buttons">
+
+
+            <!-- ASK ABOUT WEATHER -->
+
+            <form
+                method="POST"
+                action="/send"
+                class="input-form"
+                id="chatForm"
+            >
+
+                <span class="button-icon">
+                    ⌕
+                </span>
+
+                <input
+                    type="text"
+                    name="message"
+                    placeholder="Ask about the weather..."
+                    required
+                >
+                <input
+                     type="hidden"
+                     name="latitude"
+                     id="latitude"
+                 >
+                <input
+                     type="hidden"
+                     name="longitude"
+                     id="longitude"
+                >
+
+
+                <button
+                    type="submit"
+                    class="arrow"
+                >
+                    →
+                </button>
+
+            </form>
+
+
+            <!-- NEW CONVERSATION -->
+
+            <a
+                href="/clear"
+                class="new-button"
+            >
+
+                <span class="button-icon">
+                    ↻
+                </span>
+
+                <span>
+                    New conversation
+                </span>
+
+            </a>
+
+
+        </div>
+
+
+    </main>
+
+    <script>
+        // Get user's location once when page loads
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                document.getElementById('latitude').value = position.coords.latitude;
+                document.getElementById('longitude').value = position.coords.longitude;
+            });
+        }
+    </script>
+</body>
+</html>
